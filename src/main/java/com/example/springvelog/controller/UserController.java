@@ -1,41 +1,31 @@
 package com.example.springvelog.controller;
 
-import com.example.springvelog.ifs.CrudInterface;
+import com.example.springvelog.entity.User;
 import com.example.springvelog.network.Header;
 import com.example.springvelog.network.request.UserApiRequest;
 import com.example.springvelog.network.response.UserApiResponse;
 import com.example.springvelog.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
+@Slf4j
 @RestController
 @RequestMapping("/user")
-public class UserController implements CrudInterface<UserApiRequest, UserApiResponse>
+public class UserController extends CrudController<UserApiRequest, UserApiResponse, User>
 {
     @Autowired
     private UserService userService;
 
-    @Override
-    @PostMapping("")
-    public Header<UserApiResponse> create(@RequestBody Header<UserApiRequest> request) {
-        return userService.create(request);
-    }
-
-    @Override
-    @GetMapping("{id}")
-    public Header<UserApiResponse> read(@PathVariable(name="id") Long id) {
-        return userService.read(id);
-    }
-
-    @Override
-    @PutMapping("")
-    public Header<UserApiResponse> update(@RequestBody Header<UserApiRequest> request) {
-        return userService.update(request);
-    }
-
-    @Override
-    @DeleteMapping("{id}")
-    public Header delete(@PathVariable(name="id") Long id) {
-        return userService.delete(id);
+    @GetMapping("/page")
+    public Header<List<UserApiResponse>> search(@PageableDefault(sort="id",direction = Sort.Direction.ASC,size=10) Pageable pageable){
+      return userService.search(pageable);
     }
 }

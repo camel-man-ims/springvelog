@@ -24,6 +24,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @Enumerated(EnumType.STRING)
     private String status;
 
     private String password;
